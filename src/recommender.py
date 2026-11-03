@@ -70,8 +70,21 @@ def load_songs(csv_path: str) -> List[Dict]:
                 "valence": float(row["valence"]),
                 "danceability": float(row["danceability"]),
                 "acousticness": float(row["acousticness"]),
+                "popularity": int(row["popularity"]),
+                "release_decade": row["release_decade"].strip(),
+                "mood_tags": [tag.strip() for tag in row["mood_tags"].split(";")],
+                "lyrical_theme": row["lyrical_theme"].strip(),
+                "instrumentation": [item.strip() for item in row["instrumentation"].split(";")],
             })
     return songs
+
+def _clean_list(value) -> List[str]:
+    """Turn a list (or a semicolon-separated string) into lowercase, trimmed items, skipping blanks."""
+    if not value:
+        return []
+    if isinstance(value, str):
+        value = value.split(";")
+    return [item.strip().lower() for item in value if item.strip()]
 
 def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     """
@@ -87,16 +100,61 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
 
     # Rule 1: Genre match
     if song["genre"].strip().lower() == user_prefs["genre"].strip().lower():
-        score += 2.0
-        reasons.append("Genre matches (+2.0)")
+        score += 1.0
+        reasons.append("Genre matches (+1.0)")
     # Rule 2: Mood match
     if song["mood"].strip().lower() == user_prefs["mood"].strip().lower():
         score += 1.0
         reasons.append("Mood matches (+1.0)")
     # Rule 3: Energy similarity
-    energy_score = 1 - abs(song["energy"] - user_prefs["energy"])
+    energy_score = 2.0 * (1 - abs(song["energy"] - user_prefs["energy"]))
     score += energy_score
     reasons.append(f"Energy similarity (+{energy_score:.2f})")
+
+    # Advanced rules below only run when the user supplies that preference.
+
+    # Rule 4: Popularity
+    min_popularity = user_prefs.get("min_popularity")
+    target_popularity = user_prefs.get("target_popularity")
+    if target_popularity is not None:
+        popularity_score = 1 - abs(song["popularity"] - target_popularity) / 100
+        score += popularity_score
+        reasons.append(f"Popularity {song['popularity']} close to target {target_popularity} (+{popularity_score:.2f})")
+    elif min_popularity is not None:
+        if song["popularity"] >= min_popularity:
+            popularity_score = song["popularity"] / 100
+            score += popularity_score
+            reasons.append(f"Popularity {song['popularity']} meets minimum {min_popularity} (+{popularity_score:.2f})")
+        else:
+            reasons.append(f"Popularity {song['popularity']} below minimum {min_popularity} (+0.00)")
+
+    # Rule 5: Release decade
+    preferred_decade = user_prefs.get("preferred_decade")
+    if preferred_decade and song["release_decade"].lower() == preferred_decade.strip().lower():
+        score += 1.0
+        reasons.append(f"Release decade {song['release_decade']} matches (+1.0)")
+
+    # Rule 6: Mood tags (+1 per matching tag, max +2)
+    song_tags = _clean_list(song["mood_tags"])
+    matched_tags = [tag for tag in _clean_list(user_prefs.get("preferred_mood_tags")) if tag in song_tags]
+    if matched_tags:
+        tag_score = min(len(matched_tags), 2)
+        score += tag_score
+        reasons.append(f"Mood tags match: {', '.join(matched_tags)} (+{tag_score:.1f})")
+
+    # Rule 7: Lyrical theme
+    preferred_theme = user_prefs.get("preferred_lyrical_theme")
+    if preferred_theme and song["lyrical_theme"].lower() == preferred_theme.strip().lower():
+        score += 1.0
+        reasons.append(f"Lyrical theme '{song['lyrical_theme']}' matches (+1.0)")
+
+    # Rule 8: Instrumentation (+1 per matching instrument, max +2)
+    song_instruments = _clean_list(song["instrumentation"])
+    matched_instruments = [item for item in _clean_list(user_prefs.get("preferred_instruments")) if item in song_instruments]
+    if matched_instruments:
+        instrument_score = min(len(matched_instruments), 2)
+        score += instrument_score
+        reasons.append(f"Instruments match: {', '.join(matched_instruments)} (+{instrument_score:.1f})")
 
     return score, reasons
 

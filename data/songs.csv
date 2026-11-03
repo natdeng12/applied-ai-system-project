@@ -1,21 +1,21 @@
-id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness
-1,Sunrise City,Neon Echo,pop,happy,0.82,118,0.84,0.79,0.18
-2,Midnight Coding,LoRoom,lofi,chill,0.42,78,0.56,0.62,0.71
-3,Storm Runner,Voltline,rock,intense,0.91,152,0.48,0.66,0.10
-4,Library Rain,Paper Lanterns,lofi,chill,0.35,72,0.60,0.58,0.86
-5,Gym Hero,Max Pulse,pop,intense,0.93,132,0.77,0.88,0.05
-6,Spacewalk Thoughts,Orbit Bloom,ambient,chill,0.28,60,0.65,0.41,0.92
-7,Coffee Shop Stories,Slow Stereo,jazz,relaxed,0.37,90,0.71,0.54,0.89
-8,Night Drive Loop,Neon Echo,synthwave,moody,0.75,110,0.49,0.73,0.22
-9,Focus Flow,LoRoom,lofi,focused,0.40,80,0.59,0.60,0.78
-10,Rooftop Lights,Indigo Parade,indie pop,happy,0.76,124,0.81,0.82,0.35
-11,Midnight Letters,Velvet Echo,R&B,romantic,0.55,82,0.78,0.68,0.32
-12,Golden Fields,Willow Creek,country,nostalgic,0.48,96,0.72,0.62,0.85
-13,City Dreams,Young Atlas,hip-hop,confident,0.82,105,0.75,0.88,0.12
-14,Quiet Memories,Elena Marlow,classical,peaceful,0.18,72,0.35,0.15,0.94
-15,Island Rhythm,Solana Breeze,reggae,playful,0.76,92,0.89,0.82,0.45
-16,Corazon de Verano,Luna del Mar,Latin,happy,0.88,124,0.91,0.91,0.28
-17,Rainy Window,Avery Bloom,R&B,sad,0.32,68,0.19,0.42,0.58
-18,Old Photographs,Theo Winters,country,nostalgic,0.38,88,0.51,0.48,0.91
-19,Midnight Run,Jayden Cross,hip-hop,focused,0.91,138,0.62,0.85,0.08
-20,Sunday Morning,Mila Rose,Latin,peaceful,0.29,78,0.67,0.51,0.72
+id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness,popularity,release_decade,mood_tags,lyrical_theme,instrumentation
+1,Sunrise City,Neon Echo,pop,happy,0.82,118,0.84,0.79,0.18,78,2020s,upbeat;sunny;optimistic,new beginnings,synthesizer;drum machine;electric bass
+2,Midnight Coding,LoRoom,lofi,chill,0.42,78,0.56,0.62,0.71,64,2020s,mellow;cozy;late-night,focus,electric piano;vinyl crackle;soft drums
+3,Storm Runner,Voltline,rock,intense,0.91,152,0.48,0.66,0.10,71,2010s,aggressive;driving;defiant,freedom,electric guitar;bass guitar;drums
+4,Library Rain,Paper Lanterns,lofi,chill,0.35,72,0.60,0.58,0.86,58,2020s,calm;rainy;introspective,solitude,piano;rain sounds;soft drums
+5,Gym Hero,Max Pulse,pop,intense,0.93,132,0.77,0.88,0.05,83,2010s,energetic;motivational;bold,self-confidence,synthesizer;808 bass;claps
+6,Spacewalk Thoughts,Orbit Bloom,ambient,chill,0.28,60,0.65,0.41,0.92,42,2010s,dreamy;weightless;serene,wonder,synth pads;reverb guitar;field recordings
+7,Coffee Shop Stories,Slow Stereo,jazz,relaxed,0.37,90,0.71,0.54,0.89,47,2000s,warm;easygoing;conversational,everyday life,upright bass;piano;brushed drums
+8,Night Drive Loop,Neon Echo,synthwave,moody,0.75,110,0.49,0.73,0.22,61,2010s,brooding;nostalgic;nocturnal,escape,synthesizer;drum machine;arpeggiator
+9,Focus Flow,LoRoom,lofi,focused,0.40,80,0.59,0.60,0.78,55,2020s,steady;concentrated;calm,productivity,electric piano;soft drums;bass
+10,Rooftop Lights,Indigo Parade,indie pop,happy,0.76,124,0.81,0.82,0.35,69,2010s,carefree;bright;youthful,friendship,electric guitar;synthesizer;tambourine
+11,Midnight Letters,Velvet Echo,R&B,romantic,0.55,82,0.78,0.68,0.32,66,2000s,tender;sensual;longing,love,electric piano;bass guitar;soft drums
+12,Golden Fields,Willow Creek,country,nostalgic,0.48,96,0.72,0.62,0.85,52,1990s,wistful;warm;homesick,hometown memories,acoustic guitar;fiddle;banjo
+13,City Dreams,Young Atlas,hip-hop,confident,0.82,105,0.75,0.88,0.12,80,2020s,confident;ambitious;swaggering,ambition,808 bass;hi-hats;sampled piano
+14,Quiet Memories,Elena Marlow,classical,peaceful,0.18,72,0.35,0.15,0.94,35,1990s,peaceful;reflective;bittersweet,remembrance,piano;strings;cello
+15,Island Rhythm,Solana Breeze,reggae,playful,0.76,92,0.89,0.82,0.45,63,2000s,playful;sunny;laid-back,adventure,rhythm guitar;bass guitar;steel drums
+16,Corazon de Verano,Luna del Mar,Latin,happy,0.88,124,0.91,0.91,0.28,86,2020s,joyful;festive;passionate,summer romance,congas;trumpet;synthesizer
+17,Rainy Window,Avery Bloom,R&B,sad,0.32,68,0.19,0.42,0.58,50,2010s,melancholy;lonely;heartbroken,heartbreak,piano;synth pads;finger snaps
+18,Old Photographs,Theo Winters,country,nostalgic,0.38,88,0.51,0.48,0.91,44,1990s,wistful;bittersweet;tender,family,acoustic guitar;harmonica;pedal steel
+19,Midnight Run,Jayden Cross,hip-hop,focused,0.91,138,0.62,0.85,0.08,74,2020s,determined;tense;relentless,perseverance,808 bass;synthesizer;hi-hats
+20,Sunday Morning,Mila Rose,Latin,peaceful,0.29,78,0.67,0.51,0.72,39,2000s,peaceful;gentle;hopeful,rest,nylon-string guitar;soft percussion;flute

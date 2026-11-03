@@ -54,15 +54,52 @@ The genre match is weighted more heavily than the mood match, meaning the system
 
 The system also uses manually defined preferences rather than learning from listening history or feedback.
 
+1. With a thin dataset, energy decides most recommendations.
+Most genres and moods have only 0–1 songs, so for most users genre and mood stop counting after the first song or two. Energy, now worth up to 2.0, decides the rest. That produces recommendations with the right energy but the wrong style: a metal fan gets happy Latin pop, and a classical listener gets sad R&B. This is the clearest example of your data and your weights working together to create bias.
+
+2. Genre and mood matching is exact, so it's all-or-nothing.
+indie pop ≠ pop and relaxed ≠ chill. Users get rewarded only if their taste uses the dataset's exact labels. Everyone else, including fans of missing genres, people with several favorites, and people using similar words, gets weaker recommendations. It also creates a mild filter bubble, because the system only rewards "exactly the same," never "similar" or "new."
+
+
+
+
 ## 7. Evaluation
 
-The system was evaluated by running the Python program in the terminal using the default pop/happy profile with an energy preference of 0.8.
+## Evaluation
 
-Individual song scores were also tested to verify that genre, mood, and energy contributed the expected points.
+### User Profiles Tested
 
-The results were checked to make sure songs were ranked from highest to lowest score and that each recommendation displayed its scoring explanations.
+I tested the recommender using three different user profiles:
 
-For the default profile, Sunrise City received the highest score because it matched both the preferred genre and mood and had a similar energy level.
+- **High-Energy Pop:** Pop genre, happy mood, and energy level of 0.90.
+- **Chill Lofi:** Lofi genre, chill mood, and energy level of 0.35.
+- **Deep Intense Rock:** Rock genre, intense mood, and energy level of 0.88.
+
+Each profile returned a different set of recommendations, showing that the system responds to changes in genre, mood, and energy preferences.
+
+### Comparing the Results
+
+**1. High-Energy Pop vs. Chill Lofi**
+
+The High-Energy Pop profile recommended songs such as "Sunrise City" and "Corazon de Verano," while the Chill Lofi profile ranked "Library Rain" and "Midnight Coding" highest. This makes sense because the first profile prefers happy, energetic pop music, while the second prefers calmer lofi music. The different genre, mood, and energy preferences changed which songs received the most points.
+
+**2. High-Energy Pop vs. Deep Intense Rock**
+
+The High-Energy Pop profile ranked "Sunrise City" first, while the Deep Intense Rock profile ranked "Storm Runner" first. Both profiles have high energy preferences, but their genre and mood preferences are different. An interesting result was that "Gym Hero" also ranked highly for the High-Energy Pop profile even though its mood is intense rather than happy. This happened because it matched the pop genre and had an energy level close to the user's preference.
+
+**3. Chill Lofi vs. Deep Intense Rock**
+
+The Chill Lofi profile ranked "Library Rain" first, while the Deep Intense Rock profile ranked "Storm Runner" first. Their results are very different because one profile prefers low-energy, chill music and the other prefers high-energy, intense rock. This shows how the energy preference can help distinguish between users who want relaxing music and users who want more intense music.
+
+### Surprising Findings
+
+One surprising result was that a song could rank highly even when it did not match the user's preferred mood or genre. For example, "Gym Hero" received a high score for the High-Energy Pop profile because it matched the pop genre and had very similar energy. This demonstrates that energy similarity can influence rankings even when other preferences do not match.
+
+In the weight-shift experiment, I increased the importance of energy and reduced the importance of genre. "Corazon de Verano" moved above "Gym Hero" for the High-Energy Pop profile because its energy was closer to the target. However, the top recommendation for each profile stayed the same. This showed me that changing scoring weights can affect the order of recommendations, but a different ranking does not automatically mean the recommendations are more accurate.
+
+### Overall Evaluation
+
+The recommender successfully changes its recommendations based on different user preferences. However, it only compares three features: genre, mood, and energy. It does not actually understand the sound, lyrics, or personal meaning of a song. The results are useful for demonstrating a basic content-based recommendation system, but they should not be treated as perfect predictions of someone's musical taste.
 
 ## 8. Future Work
 
