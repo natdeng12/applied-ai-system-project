@@ -1,6 +1,12 @@
 import csv
 from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass
+from .validation import validate_song_rows
+from .evaluation import validate_recommendations
+import logging
+from .logging_config import setup_logging
+logger = setup_logging()
+
 
 @dataclass
 class Song:
@@ -30,53 +36,166 @@ class UserProfile:
     target_energy: float
     likes_acoustic: bool
 
+
 class Recommender:
     """
-    OOP implementation of the recommendation logic.
-    Required by tests/test_recommender.py
+    Object-oriented interface to the recommendation engine.
     """
+
     def __init__(self, songs: List[Song]):
         self.songs = songs
 
     def recommend(self, user: UserProfile, k: int = 5) -> List[Song]:
-        # TODO: Implement recommendation logic
-        return self.songs[:k]
+        """
+        Rank songs using the same scoring rules as recommend_songs().
+        """
+
+        if k < 1:
+            raise ValueError("k must be at least 1.")
+
+        user_prefs = {
+            "genre": user.favorite_genre,
+            "mood": user.favorite_mood,
+            "energy": user.target_energy,
+        }
+
+        song_dicts = [
+            {
+                "id": song.id,
+                "title": song.title,
+                "artist": song.artist,
+                "genre": song.genre,
+                "mood": song.mood,
+                "energy": song.energy,
+                "tempo_bpm": song.tempo_bpm,
+                "valence": song.valence,
+                "danceability": song.danceability,
+                "acousticness": song.acousticness,
+                "popularity": 0,
+                "release_decade": "",
+                "mood_tags": [],
+                "lyrical_theme": "",
+                "instrumentation": [],
+            }
+            for song in self.songs
+        ]
+
+        ranked = recommend_songs(user_prefs, song_dicts, k)
+
+        return [
+            self.songs[index]
+            for index, (song, score, explanation) in enumerate(ranked)
+            for index in [
+                next(
+                    i for i, original in enumerate(self.songs)
+                    if original.id == song["id"]
+                )
+            ]
+        ]
 
     def explain_recommendation(self, user: UserProfile, song: Song) -> str:
-        # TODO: Implement explanation logic
-        return "Explanation placeholder"
+        """
+        Explain why a song was recommended.
+        """
+
+        user_prefs = {
+            "genre": user.favorite_genre,
+            "mood": user.favorite_mood,
+            "energy": user.target_energy,
+        }
+
+        song_data = {
+            "genre": song.genre,
+            "mood": song.mood,
+            "energy": song.energy,
+            "popularity": 0,
+            "release_decade": "",
+            "mood_tags": [],
+            "lyrical_theme": "",
+            "instrumentation": [],
+        }
+
+        score, reasons = score_song(user_prefs, song_data)
+
+        return f"{song.title} scored {score:.2f}. " + "; ".join(reasons)
+
+
+def load_songs_with_report(csv_path: str):
+    """
+    Load raw CSV records, validate them, and return:
+    - valid songs
+    - validation issues
+    """
+
+    print(f"Loading songs from {csv_path}...")
+
+    with open(csv_path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+
+        required_columns = {
+            "id", "title", "artist", "genre", "mood",
+            "energy", "tempo_bpm", "valence", "danceability",
+            "acousticness", "popularity", "release_decade",
+            "mood_tags", "lyrical_theme", "instrumentation"
+        }
+
+        if reader.fieldnames is None:
+            raise ValueError("The CSV file is empty or has no header.")
+
+        missing_columns = required_columns - set(reader.fieldnames)
+
+        if missing_columns:
+            raise ValueError(
+                f"CSV is missing required columns: {', '.join(sorted(missing_columns))}"
+            )
+
+        raw_rows = list(reader)
+
+    # Validate records before converting their values.
+    valid_rows, issues = validate_song_rows(raw_rows)
+
+    # Convert validated values into the formats used by the recommender.
+    songs = []
+
+    for row in valid_rows:
+        song = dict(row)
+        song["id"] = int(song["id"])
+        song["tempo_bpm"] = int(song["tempo_bpm"])
+        song["popularity"] = int(song["popularity"])
+        songs.append(song)
+
+    return songs, issues
+
 
 def load_songs(csv_path: str) -> List[Dict]:
     """
-    Loads songs from a CSV file.
-    Required by src/main.py
+    Load and validate songs.
+    Keeps the original interface used by src/main.py.
     """
-    
-    """Load song data from a CSV file and return it as a list of dictionaries."""
-    
-    print(f"Loading songs from {csv_path}...")
-    songs = []
-    with open(csv_path, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            songs.append({
-                "id": int(row["id"]),
-                "title": row["title"],
-                "artist": row["artist"],
-                "genre": row["genre"],
-                "mood": row["mood"],
-                "energy": float(row["energy"]),
-                "tempo_bpm": int(row["tempo_bpm"]),
-                "valence": float(row["valence"]),
-                "danceability": float(row["danceability"]),
-                "acousticness": float(row["acousticness"]),
-                "popularity": int(row["popularity"]),
-                "release_decade": row["release_decade"].strip(),
-                "mood_tags": [tag.strip() for tag in row["mood_tags"].split(";")],
-                "lyrical_theme": row["lyrical_theme"].strip(),
-                "instrumentation": [item.strip() for item in row["instrumentation"].split(";")],
-            })
+
+    songs, issues = load_songs_with_report(csv_path)
+
+    if issues:
+        print(f"Validation excluded {len(issues)} song(s):")
+
+        for issue in issues:
+            print(
+                f"Row {issue['row']} | "
+                f"ID: {issue['id']} | "
+                f"Title: {issue['title']} | "
+                f"Reasons: {', '.join(issue['reasons'])}"
+            )
+
+    if not songs:
+        raise ValueError(
+            "No valid songs remain in the dataset. "
+            "Please check the CSV file and its validation errors."
+        )
+
+    print(f"Successfully loaded {len(songs)} valid songs.")
+
     return songs
+
 
 def _clean_list(value) -> List[str]:
     """Turn a list (or a semicolon-separated string) into lowercase, trimmed items, skipping blanks."""
@@ -159,30 +278,59 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
     return score, reasons
 
 
-def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tuple[Dict, float, str]]:
+
+def recommend_songs(
+    user_prefs: Dict,
+    songs: List[Dict],
+    k: int = 5
+) -> List[Tuple[Dict, float, str]]:
     """
-    Functional implementation of the recommendation logic.
-    Required by src/main.py
+    Rank songs, validate the results, and return safe recommendations.
     """
-    
-    """Rank songs by score and return the top recommendations with explanations."""
-    
+
+    if not isinstance(k, int) or isinstance(k, bool) or k < 1:
+        raise ValueError("k must be a positive integer.")
+
+    if not songs:
+        raise ValueError("Cannot recommend songs from an empty dataset.")
+
     scored_songs = []
+
     for song in songs:
         score, reasons = score_song(user_prefs, song)
-        scored_songs.append((song, score, reasons))
-    
-    ranked_songs = sorted(scored_songs, key=lambda item: item[1], reverse=True)
-    
-    top_songs = ranked_songs[:k]
-    
-    recommendations = []
+        scored_songs.append((song, score, "; ".join(reasons)))
 
-    for song, score, reasons in top_songs:
-        explanation = "; ".join(reasons)
-        recommendations.append((song, score, explanation))
+    ranked_songs = sorted(
+        scored_songs,
+        key=lambda item: item[1],
+        reverse=True
+    )
+
+    recommendations = ranked_songs[:k]
+
+    # Reliability check: inspect results before returning them.
+    is_valid, issues = validate_recommendations(
+        recommendations,
+        songs,
+        k
+    )
+
+    if not is_valid:
+        logger.error(
+            "Recommendation reliability check failed: %s",
+            "; ".join(issues),
+        )
+
+        raise ValueError(
+            "Recommendation reliability check failed: "
+            + "; ".join(issues)
+        )
+
+    logger.info(
+        "Generated %s recommendations from %s valid songs.",
+        len(recommendations),
+        len(songs),
+    )
 
     return recommendations
-    
-
 

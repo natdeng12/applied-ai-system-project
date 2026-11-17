@@ -1,298 +1,248 @@
-# 🎵 Music Recommender Simulation
+# 🎵 VibeFinder 1.0
+
+A content-based music recommendation simulation with an integrated reliability and testing system.
 
 ## Project Summary
 
-In this project you will build and explain a small music recommender system.
+VibeFinder is a music recommendation application that suggests songs based on a user's preferred genre, mood, and energy level.
 
-Your goal is to:
+Users can interact with the application through a Streamlit web interface, customize their music preferences, and receive up to five ranked recommendations with explanations for each result.
 
-- Represent songs and a user "taste profile" as data
-- Design a scoring rule that turns that data into recommendations
-- Evaluate what your system gets right and wrong
-- Reflect on how this mirrors real world AI recommenders
+The project also includes a reliability system that checks dataset records before they are used and validates recommendation results before displaying them. Invalid records are excluded and reported rather than silently included in the recommendation process.
 
-Replace this paragraph with your own summary of what your version does.
+## Features
 
----
+- **Interactive Interface:** Select a preferred genre, mood, and energy level.
+- **Content-Based Recommendations:** Compare user preferences with song characteristics and rank matching songs.
+- **Recommendation Explanations:** Display the match score and reasons behind each recommendation.
+- **Dataset Validation:** Check song records for missing information, invalid values, and duplicate IDs.
+- **Invalid Record Handling:** Exclude invalid records and report why they were rejected.
+- **Recommendation Validation:** Check generated recommendations for issues such as duplicate songs, invalid scores, and songs outside the valid dataset.
+- **Logging:** Record dataset validation and recommendation activity.
+- **Automated Tests:** Use pytest to check recommendation, validation, and evaluation behavior.
 
-## How The System Works
+## How the System Works
 
-Real-world music recommendation systems, such as Spotify, use information about users' listening behavior and song characteristics to predict what they might enjoy. They may combine collaborative filtering, which recommends music based on the preferences of similar users, with content-based filtering, which recommends songs based on their features. My Music Recommender Simulation will initially prioritize content-based filtering. It will compare a user's music preferences with each song's characteristics, calculate a matching score, and rank songs from the highest score to the lowest. This will allow the system to recommend songs that best match the user's preferred music style and mood.
+VibeFinder uses a content-based recommendation approach. It compares a user's selected preferences with the characteristics of songs in its dataset.
 
-### Song Features
+It does not train a machine-learning model or use listening histories from other users. Instead, it uses a scoring algorithm to estimate how closely each song matches the selected preferences.
 
-Each `Song` object will use:
+### Song Dataset
 
-- `id` – Unique song identifier
-- `title` – Song title
-- `artist` – Artist name
-- `genre` – Music genre
-- `mood` – Song mood
-- `energy` – Energy level (0–1)
-- `tempo_bpm` – Speed of the song in beats per minute
-- `valence` – How positive or happy the song sounds (0–1)
-- `danceability` – How suitable the song is for dancing (0–1)
-- `acousticness` – How acoustic the song sounds (0–1)
+The dataset contains 20 songs and 15 columns:
 
-### UserProfile Features
+| Feature | Description |
+|---|---|
+| id | Unique song identifier |
+| title | Song title |
+| artist | Artist name |
+| genre | Music genre |
+| mood | Song mood |
+| energy | Energy level (0–1) |
+| tempo_bpm | Speed of the song in beats per minute |
+| valence | How positive or happy the song sounds (0–1) |
+| danceability | How suitable the song is for dancing (0–1) |
+| acousticness | How acoustic the song sounds (0–1) |
+| popularity | Popularity value (0–100) |
+| release_decade | Decade in which the song was released |
+| mood_tags | Additional mood descriptors |
+| lyrical_theme | Main lyrical theme |
+| instrumentation | Instruments or sound elements |
 
-Each `UserProfile` object will store the user's music preferences:
+### User Preferences
 
-- `preferred_genres` – Genres the user enjoys
-- `preferred_moods` – Moods the user prefers
-- `preferred_energy` – Preferred energy level (0–1)
-- `preferred_tempo_bpm` – Preferred song speed
-- `preferred_valence` – Preferred positivity or happiness level (0–1)
+The Streamlit interface lets users select:
 
-Algorithm Recipe – Version 1
+- Favorite genre
+- Desired mood
+- Target energy level (0–1)
 
-The recommender will use content-based filtering to compare each song with the user's taste profile.
+### Recommendation Scoring
 
-Each song will receive points using three scoring rules:
+The current application uses three main scoring rules:
 
-Genre Match: Award 2.0 points if the song's genre matches the user's preferred genre.
+- Genre match: +1.0 point
+- Mood match: +1.0 point
+- Energy similarity: up to +2.0 points
 
-Mood Match: Award 1.0 point if the song's mood matches the user's preferred mood.
+Energy similarity is calculated using:
 
-Energy Similarity: Award up to 1.0 point based on how close the song's energy is to the user's target energy.
+`2.0 × (1 - abs(song_energy - preferred_energy))`
 
-Energy similarity formula:
+The scores are added together. Songs are ranked from highest to lowest, and the application displays up to five recommendations.
 
-Energy Score = 1 - abs(song_energy - preferred_energy)
+Each recommendation includes its score and an explanation of the matching preferences.
 
-The three scores will be added together, giving each song a maximum possible score of 4.0 points.
+## Reliability and Testing System
 
-The program will calculate scores for all songs and rank them from highest to lowest. If songs have the same score, the song with energy closer to the user's target will rank higher. If they are still tied, the lower song ID will come first. The system will display the top 5 recommendations.
+Reliability is an important part of VibeFinder. The system checks both the dataset and the recommendations generated from it.
 
-Potential Biases and Limitations
+### 1. Dataset Validation
 
-The scoring system gives genre more importance than mood and energy combined. This could cause the recommender to prioritize a song that matches the user's preferred genre while overlooking another song that better matches their mood and energy.
+Before recommendations are generated, the application checks the song dataset for:
 
-The initial dataset also contains only one rock song and two intense songs, which limits how much genre and mood matching can influence the recommendations. Additionally, Version 1 only considers genre, mood, and energy, ignoring other song features such as tempo, valence, danceability, and acousticness.
+- Missing required information
+- Invalid numerical values
+- Energy, valence, danceability, or acousticness outside the 0–1 range
+- Popularity outside the 0–100 range
+- Invalid tempo values
+- Invalid release decade formats
+- Duplicate song IDs
 
-Future versions may adjust the scoring weights, expand the dataset, and include additional song features to improve recommendation variety and accuracy.
----
+If multiple records share the same song ID, all records with that ID are excluded.
+
+Invalid records are skipped, and the system reports the affected rows and reasons for exclusion. If no valid songs remain, the system stops with a helpful error.
+
+### 2. Recommendation Validation
+
+After recommendations are generated, the system checks that:
+
+- The number of recommendations does not exceed the requested limit.
+- Every recommended song belongs to the validated dataset.
+- Recommendation scores are valid finite numbers.
+- Each recommendation has an explanation.
+- No song appears more than once.
+
+If the output fails validation, the system reports an error instead of treating the results as valid.
+
+### 3. Logging
+
+VibeFinder records important events in `vibefinder.log`, including dataset validation results, excluded records, and recommendation generation.
+
+### 4. Automated Testing
+
+The project uses pytest to test recommendation behavior, dataset validation, and recommendation output validation.
+
+Run the tests with:
+
+```powershell
+python -m pytest
+```
 
 ## Getting Started
 
-### Setup
+### Requirements
 
-1. Create a virtual environment (optional but recommended):
+- Python 3
+- pip
+- VS Code or another code editor
 
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate      # Mac or Linux
-   .venv\Scripts\activate         # Windows
+### 1. Clone the repository
 
-2. Install dependencies
+```powershell
+git clone https://github.com/natdeng12/applied-ai-system-project.git
+cd applied-ai-system-project
+```
 
-```bash
+### 2. Create a virtual environment
+
+```powershell
+python -m venv .venv
+```
+
+### 3. Activate the virtual environment (Windows PowerShell)
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+### 4. Install dependencies
+
+```powershell
 pip install -r requirements.txt
 ```
 
-3. Run the app:
+### 5. Run the application
 
-```bash
-python -m src.main
+```powershell
+streamlit run app.py
 ```
 
-### Running Tests
+Streamlit will open the application in your browser. If it does not open automatically, visit:
 
-Run the starter tests with:
+`http://localhost:8501`
 
-```bash
-pytest
+### 6. Run automated tests
+
+```powershell
+python -m pytest
 ```
 
-You can add more tests in `tests/test_recommender.py`.
-
----
-
-## Sample Recommendation Output
-
-The following is an example of the program's terminal output using the default user profile (`pop`, `happy`, energy `0.8`).
+## Project Structure
 
 ```text
-========================================
-       TOP SONG RECOMMENDATIONS
-========================================
-
-1. Sunrise City
-   Score:   3.98
-   Reasons: Genre matches (+2.0); Mood matches (+1.0); Energy similarity (+0.98)
-
-2. Gym Hero
-   Score:   2.87
-   Reasons: Genre matches (+2.0); Energy similarity (+0.87)
-
-3. Rooftop Lights
-   Score:   1.96
-   Reasons: Mood matches (+1.0); Energy similarity (+0.96)
-
-4. Corazon de Verano
-   Score:   1.92
-   Reasons: Mood matches (+1.0); Energy similarity (+0.92)
-
-5. City Dreams
-   Score:   0.98
-   Reasons: Energy similarity (+0.98)
-
-========================================
+applied-ai-system-project/
+│
+├── app.py
+├── requirements.txt
+├── README.md
+├── model_card.md
+├── ai_interactions.md
+├── vibefinder.log
+│
+├── data/
+│   └── songs.csv
+│
+├── src/
+│   ├── main.py
+│   ├── recommender.py
+│   ├── validation.py
+│   ├── evaluation.py
+│   └── logging_config.py
+│
+└── tests/
+    ├── test_recommender.py
+    ├── test_validation.py
+    └── test_evaluation.py
 ```
 
-**Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
+## Experiments and Evaluation
 
----
+During development, I experimented with changing the scoring weights to understand how different priorities affect recommendation rankings.
 
-## Experiments You Tried
+The original scoring rules gave genre a higher weight:
 
-Use this section to document the experiments you ran. For example:
-
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
-
----
-
-## Limitations and Risks
-
-Summarize some limitations of your recommender.
-
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
-
----
-
-## Reflection
-
-Read and complete `model_card.md`:
-
-[**Model Card**](model_card.md)
-
-Write 1 to 2 paragraphs here about what you learned:
-
-- about how recommenders turn data into predictions
-- about where bias or unfairness could show up in systems like this
-## Phase 4: Evaluation Results
-
-### Profile 1: High-Energy Pop
-
-```text
-==================================================
-PROFILE: High-Energy Pop
-==================================================
-
-1. Sunrise City
-   Score:   3.92
-   Reasons: Genre matches (+2.0); Mood matches (+1.0); Energy similarity (+0.92)
-
-2. Gym Hero
-   Score:   2.97
-   Reasons: Genre matches (+2.0); Energy similarity (+0.97)
-
-3. Corazon de Verano
-   Score:   1.98
-   Reasons: Mood matches (+1.0); Energy similarity (+0.98)
-
-4. Rooftop Lights
-   Score:   1.86
-   Reasons: Mood matches (+1.0); Energy similarity (+0.86)
-
-5. Storm Runner
-   Score:   0.99
-   Reasons: Energy similarity (+0.99)
-
-==================================================
-PROFILE: Chill Lofi
-==================================================
-
-1. Library Rain
-   Score:   4.00
-   Reasons: Genre matches (+2.0); Mood matches (+1.0); Energy similarity (+1.00)
-
-2. Midnight Coding
-   Score:   3.93
-   Reasons: Genre matches (+2.0); Mood matches (+1.0); Energy similarity (+0.93)
-
-3. Focus Flow
-   Score:   2.95
-   Reasons: Genre matches (+2.0); Energy similarity (+0.95)
-
-4. Spacewalk Thoughts
-   Score:   1.93
-   Reasons: Mood matches (+1.0); Energy similarity (+0.93)
-
-5. Coffee Shop Stories
-   Score:   0.98
-   Reasons: Energy similarity (+0.98)
-
-==================================================
-PROFILE: Deep Intense Rock
-==================================================
-
-1. Storm Runner
-   Score:   3.97
-   Reasons: Genre matches (+2.0); Mood matches (+1.0); Energy similarity (+0.97)
-
-2. Gym Hero
-   Score:   1.95
-   Reasons: Mood matches (+1.0); Energy similarity (+0.95)
-
-3. Corazon de Verano
-   Score:   1.00
-   Reasons: Energy similarity (+1.00)
-
-4. Midnight Run
-   Score:   0.97
-   Reasons: Energy similarity (+0.97)
-
-5. Sunrise City
-   Score:   0.94
-   Reasons: Energy similarity (+0.94)
-
-```
-
-### Why Library Rain Ranked First
-
-Library Rain ranked first for the Chill Lofi profile with a perfect score of 4.00. It matched all three user preferences: genre (lofi), mood (chill), and energy (0.35). Its energy value was exactly the same as the user's preferred energy, giving it the full 1.00 energy similarity point.
-
-The genre match contributes the most to the score (+2.0), followed by mood (+1.0) and energy similarity (up to +1.0). This means genre has twice as much maximum influence as either mood or energy individually.
-
-One limitation I noticed is that a song can receive a relatively high score even without matching the user's genre or mood, as long as its energy level is similar. The system also relies on a small dataset and does not consider the actual sound or lyrics of a song.
-
-This evaluation helped me understand how scoring weights influence recommendation rankings and why a mathematically high score does not always guarantee that a song will match someone's musical taste.
-
-### Weight-Shift Experiment
-
-For this experiment, I changed the scoring weights to investigate how different priorities affect music recommendations.
-
-**Original scoring:**
 - Genre match: +2.0
 - Mood match: +1.0
 - Energy similarity: up to +1.0
 
-**Experimental scoring:**
+In the experimental version, I changed the weights:
+
 - Genre match: +1.0
 - Mood match: +1.0
 - Energy similarity: up to +2.0
 
 The maximum possible score remained 4.0.
 
-**Observations:**
+The experiment showed that increasing the importance of energy similarity changed some rankings. For example, Corazon de Verano moved above Gym Hero for the High-Energy Pop profile because its energy level was closer to the user's target.
 
-The experiment showed that increasing the importance of energy similarity changed some recommendation rankings. For the High-Energy Pop profile, Corazon de Verano moved from third place to second place, overtaking Gym Hero because its energy level was closer to the user's preferred energy.
+This demonstrated that recommendation results depend on the scoring rules chosen by the developer. A higher score does not necessarily mean a song is objectively better or that a user will enjoy it more.
 
-For the Chill Lofi profile, Spacewalk Thoughts moved closer to Focus Flow in score despite not matching the preferred genre. For the Deep Intense Rock profile, songs without a rock genre match received higher scores because energy similarity became more influential.
+## Limitations and Risks
 
-**Conclusion:**
+VibeFinder has several limitations:
 
-The experimental scoring system gave more importance to energy similarity and less importance to genre. This created different rankings and allowed songs with similar energy levels to compete more strongly, even without matching the user's preferred genre or mood.
+- **Small Dataset:** The application currently uses only 20 songs, which limits recommendation variety.
+- **Rule-Based Scoring:** The system uses manually defined scoring rules rather than learning from real listening behavior.
+- **Limited Preferences:** The current interface only asks users for genre, mood, and energy preferences.
+- **Subjective Preferences:** Music taste is personal, and matching numerical features does not guarantee that someone will enjoy a song.
+- **Potential Bias:** The scoring weights influence which songs rank highest. Certain genres or moods may receive an advantage depending on the rules.
+- **Limited Generalization:** Results from a small fictional dataset cannot represent the behavior of a real-world music recommendation platform.
 
-However, different rankings do not automatically mean more accurate recommendations. The results depend on the user's actual musical taste and the quality of the dataset.
+The reliability system helps identify invalid data and problematic recommendation outputs, but it cannot guarantee that every recommendation is musically relevant or enjoyable.
 
+## Reflection
 
+Building VibeFinder helped me understand how recommendation systems turn data and user preferences into ranked results. Even a relatively simple scoring algorithm can produce different recommendations depending on how its features are weighted.
+
+I also learned that reliability is not just about whether an application runs successfully. The quality of the input data and the validity of the generated output matter too. By adding dataset validation, recommendation checks, logging, and automated tests, I made the application more capable of identifying and handling errors instead of silently accepting potentially unreliable results.
+
+This project also helped me recognize the limitations of rule-based recommendation systems. A high matching score does not necessarily represent someone's actual taste, and the data and rules chosen by a developer can influence what users see.
+
+## Model Card
+
+For more information about the system's intended use, evaluation, limitations, and risks, see [model_card.md](model_card.md).
+
+## AI Development Documentation
+
+For documentation of AI-assisted development and interactions, see [ai_interactions.md](ai_interactions.md).

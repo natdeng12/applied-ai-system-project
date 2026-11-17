@@ -1,0 +1,29 @@
+
+flowchart TD
+    A["User"] -->|"Selects genre, mood, energy"| B["Streamlit Interface (app.py)"]
+
+    C["Song Dataset (data/songs.csv)"] --> D["Dataset Loader"]
+    B --> D
+
+    D --> E["Dataset Validation (validation.py)"]
+    E -->|"Valid songs"| F["Recommendation Engine (recommender.py)"]
+    E -->|"Invalid records and reasons"| G["Validation Report"]
+
+    F --> H["Recommendation Output Validation (evaluation.py)"]
+    H -->|"Valid recommendations"| I["Top 5 Songs + Explanations"]
+    H -->|"Validation failure"| J["Error Handling"]
+
+    I --> B
+    G --> B
+    J --> B
+
+    B --> K["Human Review"]
+    K -->|"User evaluates recommendations"| A
+
+    L["Automated Tests (pytest)"] -.->|"Tests recommendation logic"| F
+    L -.->|"Tests data validation"| E
+    L -.->|"Tests output validation"| H
+
+    M["Logging (logging_config.py)"] -.->|"Records validation and recommendation events"| E
+    M -.-> F
+    M -.-> H

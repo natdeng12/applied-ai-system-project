@@ -3,6 +3,19 @@ from src.recommender import Song, UserProfile, Recommender
 def make_small_recommender() -> Recommender:
     songs = [
         Song(
+            id=2,
+            title="Chill Lofi Loop",
+            artist="Test Artist",
+            genre="lofi",
+            mood="chill",
+            energy=0.4,
+            tempo_bpm=80,
+            valence=0.6,
+            danceability=0.5,
+            acousticness=0.9,
+            ),
+        
+        Song(
             id=1,
             title="Test Pop Track",
             artist="Test Artist",
@@ -14,18 +27,7 @@ def make_small_recommender() -> Recommender:
             danceability=0.8,
             acousticness=0.2,
         ),
-        Song(
-            id=2,
-            title="Chill Lofi Loop",
-            artist="Test Artist",
-            genre="lofi",
-            mood="chill",
-            energy=0.4,
-            tempo_bpm=80,
-            valence=0.6,
-            danceability=0.5,
-            acousticness=0.9,
-        ),
+        
     ]
     return Recommender(songs)
 
