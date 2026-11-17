@@ -1,15 +1,19 @@
-
 flowchart TD
-    A["User"] -->|"Selects genre, mood, energy"| B["Streamlit Interface (app.py)"]
+    A["User"] -->|"Selects genre, mood, energy, and mode"| B["Streamlit Interface (app.py)"]
 
     C["Song Dataset (data/songs.csv)"] --> D["Dataset Loader"]
     B --> D
 
     D --> E["Dataset Validation (validation.py)"]
-    E -->|"Valid songs"| F["Recommendation Engine (recommender.py)"]
+    E -->|"Valid songs"| F["Baseline Recommendation Engine (recommender.py)"]
     E -->|"Invalid records and reasons"| G["Validation Report"]
 
+    B -->|"Specialized mode + listening context"| S["Specialized Mode (specialization.py)"]
+    P["Few-Shot Example Songs (5 listening contexts)"] -->|"Averaged into prototypes"| S
+    F -->|"Baseline score_song()"| S
+
     F --> H["Recommendation Output Validation (evaluation.py)"]
+    S --> H
     H -->|"Valid recommendations"| I["Top 5 Songs + Explanations"]
     H -->|"Validation failure"| J["Error Handling"]
 
@@ -23,7 +27,14 @@ flowchart TD
     L["Automated Tests (pytest)"] -.->|"Tests recommendation logic"| F
     L -.->|"Tests data validation"| E
     L -.->|"Tests output validation"| H
+    L -.->|"Tests specialized scoring"| S
+    L -.->|"Tests the harness catches failures"| R
+
+    R["Evaluation Harness (evaluation_runner.py)"] -->|"12 predefined test profiles"| F
+    R -->|"Specialized test profiles"| S
+    R -->|"Pass/fail checks, metrics, baseline vs specialized comparison"| O["Report (terminal + reports/evaluation_results.json)"]
 
     M["Logging (logging_config.py)"] -.->|"Records validation and recommendation events"| E
     M -.-> F
     M -.-> H
+    M -.-> S

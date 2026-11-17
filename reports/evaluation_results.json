@@ -1,0 +1,1513 @@
+{
+  "dataset": {
+    "path": "data/songs.csv",
+    "valid_songs": 20,
+    "excluded_songs": 0
+  },
+  "summary": {
+    "total_cases": 12,
+    "passed_cases": 12,
+    "failed_cases": 0,
+    "case_success_rate": 1.0,
+    "total_checks": 110,
+    "passed_checks": 110,
+    "check_pass_rate": 1.0,
+    "per_check": {
+      "avg_acousticness_in_range": {
+        "passed": 3,
+        "total": 3
+      },
+      "avg_energy_in_range": {
+        "passed": 4,
+        "total": 4
+      },
+      "avg_valence_in_range": {
+        "passed": 1,
+        "total": 1
+      },
+      "engine_ran_without_error": {
+        "passed": 12,
+        "total": 12
+      },
+      "explanations_present": {
+        "passed": 12,
+        "total": 12
+      },
+      "no_duplicates": {
+        "passed": 12,
+        "total": 12
+      },
+      "returned_requested_count": {
+        "passed": 12,
+        "total": 12
+      },
+      "scores_finite": {
+        "passed": 12,
+        "total": 12
+      },
+      "songs_in_dataset": {
+        "passed": 12,
+        "total": 12
+      },
+      "sorted_by_score": {
+        "passed": 12,
+        "total": 12
+      },
+      "top_energy_in_range": {
+        "passed": 7,
+        "total": 7
+      },
+      "top_genre_matches": {
+        "passed": 5,
+        "total": 5
+      },
+      "top_mood_matches": {
+        "passed": 6,
+        "total": 6
+      }
+    },
+    "failed_case_names": [],
+    "overall_passed": true,
+    "comparison_passed": true
+  },
+  "cases": [
+    {
+      "name": "High-Energy Pop",
+      "mode": "baseline",
+      "profile": null,
+      "prefs": {
+        "genre": "pop",
+        "mood": "happy",
+        "energy": 0.9
+      },
+      "k": 5,
+      "checks": [
+        {
+          "check": "engine_ran_without_error",
+          "passed": true,
+          "detail": "no exception"
+        },
+        {
+          "check": "returned_requested_count",
+          "passed": true,
+          "detail": "expected 5, got 5"
+        },
+        {
+          "check": "songs_in_dataset",
+          "passed": true,
+          "detail": "all songs found in dataset"
+        },
+        {
+          "check": "no_duplicates",
+          "passed": true,
+          "detail": "no duplicates"
+        },
+        {
+          "check": "scores_finite",
+          "passed": true,
+          "detail": "all scores finite"
+        },
+        {
+          "check": "explanations_present",
+          "passed": true,
+          "detail": "all explanations present"
+        },
+        {
+          "check": "sorted_by_score",
+          "passed": true,
+          "detail": "scores in descending order"
+        },
+        {
+          "check": "top_genre_matches",
+          "passed": true,
+          "detail": "expected 'pop', top song 'Sunrise City' is 'pop'"
+        },
+        {
+          "check": "top_mood_matches",
+          "passed": true,
+          "detail": "expected 'happy', top song 'Sunrise City' is 'happy'"
+        },
+        {
+          "check": "top_energy_in_range",
+          "passed": true,
+          "detail": "expected 0.70-1.00, top song energy is 0.82"
+        }
+      ],
+      "recommendations": [
+        {
+          "id": 1,
+          "title": "Sunrise City",
+          "genre": "pop",
+          "mood": "happy",
+          "score": 3.84
+        },
+        {
+          "id": 16,
+          "title": "Corazon de Verano",
+          "genre": "Latin",
+          "mood": "happy",
+          "score": 2.96
+        },
+        {
+          "id": 5,
+          "title": "Gym Hero",
+          "genre": "pop",
+          "mood": "intense",
+          "score": 2.94
+        },
+        {
+          "id": 10,
+          "title": "Rooftop Lights",
+          "genre": "indie pop",
+          "mood": "happy",
+          "score": 2.72
+        },
+        {
+          "id": 3,
+          "title": "Storm Runner",
+          "genre": "rock",
+          "mood": "intense",
+          "score": 1.98
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "name": "Chill Lofi",
+      "mode": "baseline",
+      "profile": null,
+      "prefs": {
+        "genre": "lofi",
+        "mood": "chill",
+        "energy": 0.35
+      },
+      "k": 5,
+      "checks": [
+        {
+          "check": "engine_ran_without_error",
+          "passed": true,
+          "detail": "no exception"
+        },
+        {
+          "check": "returned_requested_count",
+          "passed": true,
+          "detail": "expected 5, got 5"
+        },
+        {
+          "check": "songs_in_dataset",
+          "passed": true,
+          "detail": "all songs found in dataset"
+        },
+        {
+          "check": "no_duplicates",
+          "passed": true,
+          "detail": "no duplicates"
+        },
+        {
+          "check": "scores_finite",
+          "passed": true,
+          "detail": "all scores finite"
+        },
+        {
+          "check": "explanations_present",
+          "passed": true,
+          "detail": "all explanations present"
+        },
+        {
+          "check": "sorted_by_score",
+          "passed": true,
+          "detail": "scores in descending order"
+        },
+        {
+          "check": "top_genre_matches",
+          "passed": true,
+          "detail": "expected 'lofi', top song 'Library Rain' is 'lofi'"
+        },
+        {
+          "check": "top_mood_matches",
+          "passed": true,
+          "detail": "expected 'chill', top song 'Library Rain' is 'chill'"
+        },
+        {
+          "check": "avg_energy_in_range",
+          "passed": true,
+          "detail": "expected 0.00-0.60, average energy is 0.36"
+        }
+      ],
+      "recommendations": [
+        {
+          "id": 4,
+          "title": "Library Rain",
+          "genre": "lofi",
+          "mood": "chill",
+          "score": 4.0
+        },
+        {
+          "id": 2,
+          "title": "Midnight Coding",
+          "genre": "lofi",
+          "mood": "chill",
+          "score": 3.86
+        },
+        {
+          "id": 9,
+          "title": "Focus Flow",
+          "genre": "lofi",
+          "mood": "focused",
+          "score": 2.9
+        },
+        {
+          "id": 6,
+          "title": "Spacewalk Thoughts",
+          "genre": "ambient",
+          "mood": "chill",
+          "score": 2.86
+        },
+        {
+          "id": 7,
+          "title": "Coffee Shop Stories",
+          "genre": "jazz",
+          "mood": "relaxed",
+          "score": 1.96
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "name": "Deep Intense Rock",
+      "mode": "baseline",
+      "profile": null,
+      "prefs": {
+        "genre": "rock",
+        "mood": "intense",
+        "energy": 0.88
+      },
+      "k": 5,
+      "checks": [
+        {
+          "check": "engine_ran_without_error",
+          "passed": true,
+          "detail": "no exception"
+        },
+        {
+          "check": "returned_requested_count",
+          "passed": true,
+          "detail": "expected 5, got 5"
+        },
+        {
+          "check": "songs_in_dataset",
+          "passed": true,
+          "detail": "all songs found in dataset"
+        },
+        {
+          "check": "no_duplicates",
+          "passed": true,
+          "detail": "no duplicates"
+        },
+        {
+          "check": "scores_finite",
+          "passed": true,
+          "detail": "all scores finite"
+        },
+        {
+          "check": "explanations_present",
+          "passed": true,
+          "detail": "all explanations present"
+        },
+        {
+          "check": "sorted_by_score",
+          "passed": true,
+          "detail": "scores in descending order"
+        },
+        {
+          "check": "top_genre_matches",
+          "passed": true,
+          "detail": "expected 'rock', top song 'Storm Runner' is 'rock'"
+        },
+        {
+          "check": "top_mood_matches",
+          "passed": true,
+          "detail": "expected 'intense', top song 'Storm Runner' is 'intense'"
+        },
+        {
+          "check": "top_energy_in_range",
+          "passed": true,
+          "detail": "expected 0.75-1.00, top song energy is 0.91"
+        }
+      ],
+      "recommendations": [
+        {
+          "id": 3,
+          "title": "Storm Runner",
+          "genre": "rock",
+          "mood": "intense",
+          "score": 3.94
+        },
+        {
+          "id": 5,
+          "title": "Gym Hero",
+          "genre": "pop",
+          "mood": "intense",
+          "score": 2.9
+        },
+        {
+          "id": 16,
+          "title": "Corazon de Verano",
+          "genre": "Latin",
+          "mood": "happy",
+          "score": 2.0
+        },
+        {
+          "id": 19,
+          "title": "Midnight Run",
+          "genre": "hip-hop",
+          "mood": "focused",
+          "score": 1.94
+        },
+        {
+          "id": 1,
+          "title": "Sunrise City",
+          "genre": "pop",
+          "mood": "happy",
+          "score": 1.88
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "name": "Relaxed Jazz",
+      "mode": "baseline",
+      "profile": null,
+      "prefs": {
+        "genre": "jazz",
+        "mood": "relaxed",
+        "energy": 0.35
+      },
+      "k": 5,
+      "checks": [
+        {
+          "check": "engine_ran_without_error",
+          "passed": true,
+          "detail": "no exception"
+        },
+        {
+          "check": "returned_requested_count",
+          "passed": true,
+          "detail": "expected 5, got 5"
+        },
+        {
+          "check": "songs_in_dataset",
+          "passed": true,
+          "detail": "all songs found in dataset"
+        },
+        {
+          "check": "no_duplicates",
+          "passed": true,
+          "detail": "no duplicates"
+        },
+        {
+          "check": "scores_finite",
+          "passed": true,
+          "detail": "all scores finite"
+        },
+        {
+          "check": "explanations_present",
+          "passed": true,
+          "detail": "all explanations present"
+        },
+        {
+          "check": "sorted_by_score",
+          "passed": true,
+          "detail": "scores in descending order"
+        },
+        {
+          "check": "top_genre_matches",
+          "passed": true,
+          "detail": "expected 'jazz', top song 'Coffee Shop Stories' is 'jazz'"
+        },
+        {
+          "check": "top_mood_matches",
+          "passed": true,
+          "detail": "expected 'relaxed', top song 'Coffee Shop Stories' is 'relaxed'"
+        },
+        {
+          "check": "avg_energy_in_range",
+          "passed": true,
+          "detail": "expected 0.00-0.60, average energy is 0.36"
+        }
+      ],
+      "recommendations": [
+        {
+          "id": 7,
+          "title": "Coffee Shop Stories",
+          "genre": "jazz",
+          "mood": "relaxed",
+          "score": 3.96
+        },
+        {
+          "id": 4,
+          "title": "Library Rain",
+          "genre": "lofi",
+          "mood": "chill",
+          "score": 2.0
+        },
+        {
+          "id": 17,
+          "title": "Rainy Window",
+          "genre": "R&B",
+          "mood": "sad",
+          "score": 1.94
+        },
+        {
+          "id": 18,
+          "title": "Old Photographs",
+          "genre": "country",
+          "mood": "nostalgic",
+          "score": 1.94
+        },
+        {
+          "id": 9,
+          "title": "Focus Flow",
+          "genre": "lofi",
+          "mood": "focused",
+          "score": 1.9
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "name": "Sad R&B",
+      "mode": "baseline",
+      "profile": null,
+      "prefs": {
+        "genre": "R&B",
+        "mood": "sad",
+        "energy": 0.3
+      },
+      "k": 5,
+      "checks": [
+        {
+          "check": "engine_ran_without_error",
+          "passed": true,
+          "detail": "no exception"
+        },
+        {
+          "check": "returned_requested_count",
+          "passed": true,
+          "detail": "expected 5, got 5"
+        },
+        {
+          "check": "songs_in_dataset",
+          "passed": true,
+          "detail": "all songs found in dataset"
+        },
+        {
+          "check": "no_duplicates",
+          "passed": true,
+          "detail": "no duplicates"
+        },
+        {
+          "check": "scores_finite",
+          "passed": true,
+          "detail": "all scores finite"
+        },
+        {
+          "check": "explanations_present",
+          "passed": true,
+          "detail": "all explanations present"
+        },
+        {
+          "check": "sorted_by_score",
+          "passed": true,
+          "detail": "scores in descending order"
+        },
+        {
+          "check": "top_genre_matches",
+          "passed": true,
+          "detail": "expected 'r&b', top song 'Rainy Window' is 'r&b'"
+        },
+        {
+          "check": "top_mood_matches",
+          "passed": true,
+          "detail": "expected 'sad', top song 'Rainy Window' is 'sad'"
+        },
+        {
+          "check": "top_energy_in_range",
+          "passed": true,
+          "detail": "expected 0.00-0.50, top song energy is 0.32"
+        }
+      ],
+      "recommendations": [
+        {
+          "id": 17,
+          "title": "Rainy Window",
+          "genre": "R&B",
+          "mood": "sad",
+          "score": 3.96
+        },
+        {
+          "id": 11,
+          "title": "Midnight Letters",
+          "genre": "R&B",
+          "mood": "romantic",
+          "score": 2.5
+        },
+        {
+          "id": 20,
+          "title": "Sunday Morning",
+          "genre": "Latin",
+          "mood": "peaceful",
+          "score": 1.98
+        },
+        {
+          "id": 6,
+          "title": "Spacewalk Thoughts",
+          "genre": "ambient",
+          "mood": "chill",
+          "score": 1.96
+        },
+        {
+          "id": 4,
+          "title": "Library Rain",
+          "genre": "lofi",
+          "mood": "chill",
+          "score": 1.9
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "name": "Unknown Genre (Metal)",
+      "mode": "baseline",
+      "profile": null,
+      "prefs": {
+        "genre": "metal",
+        "mood": "intense",
+        "energy": 0.95
+      },
+      "k": 5,
+      "checks": [
+        {
+          "check": "engine_ran_without_error",
+          "passed": true,
+          "detail": "no exception"
+        },
+        {
+          "check": "returned_requested_count",
+          "passed": true,
+          "detail": "expected 5, got 5"
+        },
+        {
+          "check": "songs_in_dataset",
+          "passed": true,
+          "detail": "all songs found in dataset"
+        },
+        {
+          "check": "no_duplicates",
+          "passed": true,
+          "detail": "no duplicates"
+        },
+        {
+          "check": "scores_finite",
+          "passed": true,
+          "detail": "all scores finite"
+        },
+        {
+          "check": "explanations_present",
+          "passed": true,
+          "detail": "all explanations present"
+        },
+        {
+          "check": "sorted_by_score",
+          "passed": true,
+          "detail": "scores in descending order"
+        },
+        {
+          "check": "top_mood_matches",
+          "passed": true,
+          "detail": "expected 'intense', top song 'Gym Hero' is 'intense'"
+        },
+        {
+          "check": "top_energy_in_range",
+          "passed": true,
+          "detail": "expected 0.80-1.00, top song energy is 0.93"
+        }
+      ],
+      "recommendations": [
+        {
+          "id": 5,
+          "title": "Gym Hero",
+          "genre": "pop",
+          "mood": "intense",
+          "score": 2.96
+        },
+        {
+          "id": 3,
+          "title": "Storm Runner",
+          "genre": "rock",
+          "mood": "intense",
+          "score": 2.92
+        },
+        {
+          "id": 19,
+          "title": "Midnight Run",
+          "genre": "hip-hop",
+          "mood": "focused",
+          "score": 1.92
+        },
+        {
+          "id": 16,
+          "title": "Corazon de Verano",
+          "genre": "Latin",
+          "mood": "happy",
+          "score": 1.86
+        },
+        {
+          "id": 1,
+          "title": "Sunrise City",
+          "genre": "pop",
+          "mood": "happy",
+          "score": 1.74
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "name": "Oversized Request (k=25)",
+      "mode": "baseline",
+      "profile": null,
+      "prefs": {
+        "genre": "pop",
+        "mood": "happy",
+        "energy": 0.5
+      },
+      "k": 25,
+      "checks": [
+        {
+          "check": "engine_ran_without_error",
+          "passed": true,
+          "detail": "no exception"
+        },
+        {
+          "check": "returned_requested_count",
+          "passed": true,
+          "detail": "expected 20, got 20"
+        },
+        {
+          "check": "songs_in_dataset",
+          "passed": true,
+          "detail": "all songs found in dataset"
+        },
+        {
+          "check": "no_duplicates",
+          "passed": true,
+          "detail": "no duplicates"
+        },
+        {
+          "check": "scores_finite",
+          "passed": true,
+          "detail": "all scores finite"
+        },
+        {
+          "check": "explanations_present",
+          "passed": true,
+          "detail": "all explanations present"
+        },
+        {
+          "check": "sorted_by_score",
+          "passed": true,
+          "detail": "scores in descending order"
+        }
+      ],
+      "recommendations": [
+        {
+          "id": 1,
+          "title": "Sunrise City",
+          "genre": "pop",
+          "mood": "happy",
+          "score": 3.36
+        },
+        {
+          "id": 10,
+          "title": "Rooftop Lights",
+          "genre": "indie pop",
+          "mood": "happy",
+          "score": 2.48
+        },
+        {
+          "id": 16,
+          "title": "Corazon de Verano",
+          "genre": "Latin",
+          "mood": "happy",
+          "score": 2.24
+        },
+        {
+          "id": 5,
+          "title": "Gym Hero",
+          "genre": "pop",
+          "mood": "intense",
+          "score": 2.14
+        },
+        {
+          "id": 12,
+          "title": "Golden Fields",
+          "genre": "country",
+          "mood": "nostalgic",
+          "score": 1.96
+        },
+        {
+          "id": 11,
+          "title": "Midnight Letters",
+          "genre": "R&B",
+          "mood": "romantic",
+          "score": 1.9
+        },
+        {
+          "id": 2,
+          "title": "Midnight Coding",
+          "genre": "lofi",
+          "mood": "chill",
+          "score": 1.84
+        },
+        {
+          "id": 9,
+          "title": "Focus Flow",
+          "genre": "lofi",
+          "mood": "focused",
+          "score": 1.8
+        },
+        {
+          "id": 18,
+          "title": "Old Photographs",
+          "genre": "country",
+          "mood": "nostalgic",
+          "score": 1.76
+        },
+        {
+          "id": 7,
+          "title": "Coffee Shop Stories",
+          "genre": "jazz",
+          "mood": "relaxed",
+          "score": 1.74
+        },
+        {
+          "id": 4,
+          "title": "Library Rain",
+          "genre": "lofi",
+          "mood": "chill",
+          "score": 1.7
+        },
+        {
+          "id": 17,
+          "title": "Rainy Window",
+          "genre": "R&B",
+          "mood": "sad",
+          "score": 1.64
+        },
+        {
+          "id": 20,
+          "title": "Sunday Morning",
+          "genre": "Latin",
+          "mood": "peaceful",
+          "score": 1.58
+        },
+        {
+          "id": 6,
+          "title": "Spacewalk Thoughts",
+          "genre": "ambient",
+          "mood": "chill",
+          "score": 1.56
+        },
+        {
+          "id": 8,
+          "title": "Night Drive Loop",
+          "genre": "synthwave",
+          "mood": "moody",
+          "score": 1.5
+        },
+        {
+          "id": 15,
+          "title": "Island Rhythm",
+          "genre": "reggae",
+          "mood": "playful",
+          "score": 1.48
+        },
+        {
+          "id": 13,
+          "title": "City Dreams",
+          "genre": "hip-hop",
+          "mood": "confident",
+          "score": 1.36
+        },
+        {
+          "id": 14,
+          "title": "Quiet Memories",
+          "genre": "classical",
+          "mood": "peaceful",
+          "score": 1.36
+        },
+        {
+          "id": 3,
+          "title": "Storm Runner",
+          "genre": "rock",
+          "mood": "intense",
+          "score": 1.18
+        },
+        {
+          "id": 19,
+          "title": "Midnight Run",
+          "genre": "hip-hop",
+          "mood": "focused",
+          "score": 1.18
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "name": "Study Session (lofi)",
+      "mode": "specialized",
+      "profile": "focus_study",
+      "prefs": {
+        "genre": "lofi",
+        "mood": "focused",
+        "energy": 0.45
+      },
+      "k": 5,
+      "checks": [
+        {
+          "check": "engine_ran_without_error",
+          "passed": true,
+          "detail": "no exception"
+        },
+        {
+          "check": "returned_requested_count",
+          "passed": true,
+          "detail": "expected 5, got 5"
+        },
+        {
+          "check": "songs_in_dataset",
+          "passed": true,
+          "detail": "all songs found in dataset"
+        },
+        {
+          "check": "no_duplicates",
+          "passed": true,
+          "detail": "no duplicates"
+        },
+        {
+          "check": "scores_finite",
+          "passed": true,
+          "detail": "all scores finite"
+        },
+        {
+          "check": "explanations_present",
+          "passed": true,
+          "detail": "all explanations present"
+        },
+        {
+          "check": "sorted_by_score",
+          "passed": true,
+          "detail": "scores in descending order"
+        },
+        {
+          "check": "top_energy_in_range",
+          "passed": true,
+          "detail": "expected 0.00-0.60, top song energy is 0.40"
+        },
+        {
+          "check": "avg_acousticness_in_range",
+          "passed": true,
+          "detail": "expected 0.50-1.00, average acousticness is 0.65"
+        }
+      ],
+      "recommendations": [
+        {
+          "id": 9,
+          "title": "Focus Flow",
+          "genre": "lofi",
+          "mood": "focused",
+          "score": 7.8227
+        },
+        {
+          "id": 2,
+          "title": "Midnight Coding",
+          "genre": "lofi",
+          "mood": "chill",
+          "score": 6.8347
+        },
+        {
+          "id": 4,
+          "title": "Library Rain",
+          "genre": "lofi",
+          "mood": "chill",
+          "score": 6.696
+        },
+        {
+          "id": 17,
+          "title": "Rainy Window",
+          "genre": "R&B",
+          "mood": "sad",
+          "score": 4.4467
+        },
+        {
+          "id": 11,
+          "title": "Midnight Letters",
+          "genre": "R&B",
+          "mood": "romantic",
+          "score": 4.3667
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "name": "Workout Mix (pop)",
+      "mode": "specialized",
+      "profile": "workout",
+      "prefs": {
+        "genre": "pop",
+        "mood": "happy",
+        "energy": 0.75
+      },
+      "k": 5,
+      "checks": [
+        {
+          "check": "engine_ran_without_error",
+          "passed": true,
+          "detail": "no exception"
+        },
+        {
+          "check": "returned_requested_count",
+          "passed": true,
+          "detail": "expected 5, got 5"
+        },
+        {
+          "check": "songs_in_dataset",
+          "passed": true,
+          "detail": "all songs found in dataset"
+        },
+        {
+          "check": "no_duplicates",
+          "passed": true,
+          "detail": "no duplicates"
+        },
+        {
+          "check": "scores_finite",
+          "passed": true,
+          "detail": "all scores finite"
+        },
+        {
+          "check": "explanations_present",
+          "passed": true,
+          "detail": "all explanations present"
+        },
+        {
+          "check": "sorted_by_score",
+          "passed": true,
+          "detail": "scores in descending order"
+        },
+        {
+          "check": "top_energy_in_range",
+          "passed": true,
+          "detail": "expected 0.80-1.00, top song energy is 0.82"
+        },
+        {
+          "check": "avg_energy_in_range",
+          "passed": true,
+          "detail": "expected 0.75-1.00, average energy is 0.87"
+        }
+      ],
+      "recommendations": [
+        {
+          "id": 1,
+          "title": "Sunrise City",
+          "genre": "pop",
+          "mood": "happy",
+          "score": 6.6707
+        },
+        {
+          "id": 5,
+          "title": "Gym Hero",
+          "genre": "pop",
+          "mood": "intense",
+          "score": 6.5747
+        },
+        {
+          "id": 10,
+          "title": "Rooftop Lights",
+          "genre": "indie pop",
+          "mood": "happy",
+          "score": 5.7347
+        },
+        {
+          "id": 19,
+          "title": "Midnight Run",
+          "genre": "hip-hop",
+          "mood": "focused",
+          "score": 5.6333
+        },
+        {
+          "id": 3,
+          "title": "Storm Runner",
+          "genre": "rock",
+          "mood": "intense",
+          "score": 5.4707
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "name": "Wind Down (jazz)",
+      "mode": "specialized",
+      "profile": "relax_chill",
+      "prefs": {
+        "genre": "jazz",
+        "mood": "relaxed",
+        "energy": 0.45
+      },
+      "k": 5,
+      "checks": [
+        {
+          "check": "engine_ran_without_error",
+          "passed": true,
+          "detail": "no exception"
+        },
+        {
+          "check": "returned_requested_count",
+          "passed": true,
+          "detail": "expected 5, got 5"
+        },
+        {
+          "check": "songs_in_dataset",
+          "passed": true,
+          "detail": "all songs found in dataset"
+        },
+        {
+          "check": "no_duplicates",
+          "passed": true,
+          "detail": "no duplicates"
+        },
+        {
+          "check": "scores_finite",
+          "passed": true,
+          "detail": "all scores finite"
+        },
+        {
+          "check": "explanations_present",
+          "passed": true,
+          "detail": "all explanations present"
+        },
+        {
+          "check": "sorted_by_score",
+          "passed": true,
+          "detail": "scores in descending order"
+        },
+        {
+          "check": "avg_energy_in_range",
+          "passed": true,
+          "detail": "expected 0.00-0.50, average energy is 0.35"
+        },
+        {
+          "check": "avg_acousticness_in_range",
+          "passed": true,
+          "detail": "expected 0.60-1.00, average acousticness is 0.85"
+        }
+      ],
+      "recommendations": [
+        {
+          "id": 7,
+          "title": "Coffee Shop Stories",
+          "genre": "jazz",
+          "mood": "relaxed",
+          "score": 7.7107
+        },
+        {
+          "id": 6,
+          "title": "Spacewalk Thoughts",
+          "genre": "ambient",
+          "mood": "chill",
+          "score": 5.5867
+        },
+        {
+          "id": 20,
+          "title": "Sunday Morning",
+          "genre": "Latin",
+          "mood": "peaceful",
+          "score": 5.0853
+        },
+        {
+          "id": 12,
+          "title": "Golden Fields",
+          "genre": "country",
+          "mood": "nostalgic",
+          "score": 4.7213
+        },
+        {
+          "id": 4,
+          "title": "Library Rain",
+          "genre": "lofi",
+          "mood": "chill",
+          "score": 4.688
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "name": "Reflective Evening (country)",
+      "mode": "specialized",
+      "profile": "emotional_reflective",
+      "prefs": {
+        "genre": "country",
+        "mood": "nostalgic",
+        "energy": 0.45
+      },
+      "k": 5,
+      "checks": [
+        {
+          "check": "engine_ran_without_error",
+          "passed": true,
+          "detail": "no exception"
+        },
+        {
+          "check": "returned_requested_count",
+          "passed": true,
+          "detail": "expected 5, got 5"
+        },
+        {
+          "check": "songs_in_dataset",
+          "passed": true,
+          "detail": "all songs found in dataset"
+        },
+        {
+          "check": "no_duplicates",
+          "passed": true,
+          "detail": "no duplicates"
+        },
+        {
+          "check": "scores_finite",
+          "passed": true,
+          "detail": "all scores finite"
+        },
+        {
+          "check": "explanations_present",
+          "passed": true,
+          "detail": "all explanations present"
+        },
+        {
+          "check": "sorted_by_score",
+          "passed": true,
+          "detail": "scores in descending order"
+        },
+        {
+          "check": "avg_valence_in_range",
+          "passed": true,
+          "detail": "expected 0.00-0.60, average valence is 0.47"
+        }
+      ],
+      "recommendations": [
+        {
+          "id": 18,
+          "title": "Old Photographs",
+          "genre": "country",
+          "mood": "nostalgic",
+          "score": 7.1613
+        },
+        {
+          "id": 12,
+          "title": "Golden Fields",
+          "genre": "country",
+          "mood": "nostalgic",
+          "score": 7.0693
+        },
+        {
+          "id": 17,
+          "title": "Rainy Window",
+          "genre": "R&B",
+          "mood": "sad",
+          "score": 5.588
+        },
+        {
+          "id": 14,
+          "title": "Quiet Memories",
+          "genre": "classical",
+          "mood": "peaceful",
+          "score": 5.184
+        },
+        {
+          "id": 4,
+          "title": "Library Rain",
+          "genre": "lofi",
+          "mood": "chill",
+          "score": 4.5653
+        }
+      ],
+      "error": null,
+      "passed": true
+    },
+    {
+      "name": "Night Drive (synthwave)",
+      "mode": "specialized",
+      "profile": "night_drive",
+      "prefs": {
+        "genre": "synthwave",
+        "mood": "moody",
+        "energy": 0.7
+      },
+      "k": 5,
+      "checks": [
+        {
+          "check": "engine_ran_without_error",
+          "passed": true,
+          "detail": "no exception"
+        },
+        {
+          "check": "returned_requested_count",
+          "passed": true,
+          "detail": "expected 5, got 5"
+        },
+        {
+          "check": "songs_in_dataset",
+          "passed": true,
+          "detail": "all songs found in dataset"
+        },
+        {
+          "check": "no_duplicates",
+          "passed": true,
+          "detail": "no duplicates"
+        },
+        {
+          "check": "scores_finite",
+          "passed": true,
+          "detail": "all scores finite"
+        },
+        {
+          "check": "explanations_present",
+          "passed": true,
+          "detail": "all explanations present"
+        },
+        {
+          "check": "sorted_by_score",
+          "passed": true,
+          "detail": "scores in descending order"
+        },
+        {
+          "check": "top_energy_in_range",
+          "passed": true,
+          "detail": "expected 0.55-0.90, top song energy is 0.75"
+        },
+        {
+          "check": "avg_acousticness_in_range",
+          "passed": true,
+          "detail": "expected 0.00-0.40, average acousticness is 0.31"
+        }
+      ],
+      "recommendations": [
+        {
+          "id": 8,
+          "title": "Night Drive Loop",
+          "genre": "synthwave",
+          "mood": "moody",
+          "score": 7.8373
+        },
+        {
+          "id": 10,
+          "title": "Rooftop Lights",
+          "genre": "indie pop",
+          "mood": "happy",
+          "score": 4.5693
+        },
+        {
+          "id": 1,
+          "title": "Sunrise City",
+          "genre": "pop",
+          "mood": "happy",
+          "score": 4.5053
+        },
+        {
+          "id": 2,
+          "title": "Midnight Coding",
+          "genre": "lofi",
+          "mood": "chill",
+          "score": 4.456
+        },
+        {
+          "id": 3,
+          "title": "Storm Runner",
+          "genre": "rock",
+          "mood": "intense",
+          "score": 4.3587
+        }
+      ],
+      "error": null,
+      "passed": true
+    }
+  ],
+  "specialization_comparison": {
+    "profiles": [
+      {
+        "name": "Study Session (lofi)",
+        "specialized_profile": "Focus / Study",
+        "k": 5,
+        "baseline_top": [
+          "Focus Flow",
+          "Midnight Coding",
+          "Library Rain",
+          "Midnight Run",
+          "Golden Fields"
+        ],
+        "specialized_top": [
+          "Focus Flow",
+          "Midnight Coding",
+          "Library Rain",
+          "Rainy Window",
+          "Midnight Letters"
+        ],
+        "top_pick_changed": false,
+        "shared_songs": 3,
+        "positions_changed": 2,
+        "results_differ": true,
+        "baseline_context_checks_passed": 2,
+        "specialized_context_checks_passed": 2,
+        "context_checks_total": 2,
+        "baseline_context_details": [
+          "expected 0.00-0.60, top song energy is 0.40",
+          "expected 0.50-1.00, average acousticness is 0.66"
+        ]
+      },
+      {
+        "name": "Workout Mix (pop)",
+        "specialized_profile": "Workout / High Energy",
+        "k": 5,
+        "baseline_top": [
+          "Sunrise City",
+          "Rooftop Lights",
+          "Corazon de Verano",
+          "Gym Hero",
+          "Night Drive Loop"
+        ],
+        "specialized_top": [
+          "Sunrise City",
+          "Gym Hero",
+          "Rooftop Lights",
+          "Midnight Run",
+          "Storm Runner"
+        ],
+        "top_pick_changed": false,
+        "shared_songs": 3,
+        "positions_changed": 4,
+        "results_differ": true,
+        "baseline_context_checks_passed": 2,
+        "specialized_context_checks_passed": 2,
+        "context_checks_total": 2,
+        "baseline_context_details": [
+          "expected 0.80-1.00, top song energy is 0.82",
+          "expected 0.75-1.00, average energy is 0.83"
+        ]
+      },
+      {
+        "name": "Wind Down (jazz)",
+        "specialized_profile": "Relaxation / Chill",
+        "k": 5,
+        "baseline_top": [
+          "Coffee Shop Stories",
+          "Midnight Coding",
+          "Golden Fields",
+          "Focus Flow",
+          "Old Photographs"
+        ],
+        "specialized_top": [
+          "Coffee Shop Stories",
+          "Spacewalk Thoughts",
+          "Sunday Morning",
+          "Golden Fields",
+          "Library Rain"
+        ],
+        "top_pick_changed": false,
+        "shared_songs": 2,
+        "positions_changed": 4,
+        "results_differ": true,
+        "baseline_context_checks_passed": 2,
+        "specialized_context_checks_passed": 2,
+        "context_checks_total": 2,
+        "baseline_context_details": [
+          "expected 0.00-0.50, average energy is 0.41",
+          "expected 0.60-1.00, average acousticness is 0.83"
+        ]
+      },
+      {
+        "name": "Reflective Evening (country)",
+        "specialized_profile": "Emotional / Reflective",
+        "k": 5,
+        "baseline_top": [
+          "Golden Fields",
+          "Old Photographs",
+          "Midnight Coding",
+          "Focus Flow",
+          "Coffee Shop Stories"
+        ],
+        "specialized_top": [
+          "Old Photographs",
+          "Golden Fields",
+          "Rainy Window",
+          "Quiet Memories",
+          "Library Rain"
+        ],
+        "top_pick_changed": true,
+        "shared_songs": 2,
+        "positions_changed": 5,
+        "results_differ": true,
+        "baseline_context_checks_passed": 0,
+        "specialized_context_checks_passed": 1,
+        "context_checks_total": 1,
+        "baseline_context_details": [
+          "expected 0.00-0.60, average valence is 0.62"
+        ]
+      },
+      {
+        "name": "Night Drive (synthwave)",
+        "specialized_profile": "Night Drive",
+        "k": 5,
+        "baseline_top": [
+          "Night Drive Loop",
+          "Rooftop Lights",
+          "Island Rhythm",
+          "Sunrise City",
+          "City Dreams"
+        ],
+        "specialized_top": [
+          "Night Drive Loop",
+          "Rooftop Lights",
+          "Sunrise City",
+          "Midnight Coding",
+          "Storm Runner"
+        ],
+        "top_pick_changed": false,
+        "shared_songs": 3,
+        "positions_changed": 3,
+        "results_differ": true,
+        "baseline_context_checks_passed": 2,
+        "specialized_context_checks_passed": 2,
+        "context_checks_total": 2,
+        "baseline_context_details": [
+          "expected 0.55-0.90, top song energy is 0.75",
+          "expected 0.00-0.40, average acousticness is 0.26"
+        ]
+      }
+    ],
+    "profiles_with_different_results": 5,
+    "baseline_context_checks_passed": 8,
+    "specialized_context_checks_passed": 9,
+    "context_checks_total": 9,
+    "required_minimum": 3,
+    "passed": true
+  }
+}

@@ -162,6 +162,91 @@ This helped me understand how a Python application can be turned into an interac
 
 ---
 
+## Stretch Features: Evaluation Harness and Specialized Mode
+
+### What task did I give the AI?
+
+I asked my AI coding assistant (Claude Code) to add two stretch features to the existing project without rebuilding it:
+
+1. A **test harness / evaluation script** that runs VibeFinder on predefined profiles and reports measurable pass/fail results.
+2. A **specialized recommendation mode** based on few-shot examples. I required it to be honest that this is rule-based, not real fine-tuning.
+
+I asked it to work in stages: inspect, plan, build the harness, test, build the specialization, test, run the evaluation, test the Streamlit app, then update the documentation.
+
+### Inspection and plan
+
+The assistant read the code and ran the existing tests first. It confirmed 14 passing tests using the project's `.venv`. It also flagged some issues before writing code:
+
+- `app.py` displayed the "Your Recommendations" section **twice** (a duplicated block). This was fixed while adding the mode selector.
+- The app's dropdowns include values that are not in the dataset (genre `electronic`, moods `calm` and `energetic`). This was left unchanged and noted as a limitation.
+- The project logger prints INFO messages to the terminal, which would clutter the report. The harness quiets only the console handler, so the log file still records everything.
+
+### What was implemented
+
+**1. `src/evaluation_runner.py`: evaluation harness**
+
+- 12 predefined profiles: 7 baseline and 5 specialized. Examples:
+  - `High-Energy Pop`: pop / happy / 0.90. Expects the top song to be pop, happy, with energy 0.70–1.00.
+  - `Unknown Genre (Metal)`: a genre that does not exist. Expects an intense, high-energy top song.
+  - `Oversized Request (k=25)`: expects all 20 songs back, with no crash and no invented songs.
+  - `Workout Mix (pop)` in workout mode: expects average energy ≥ 0.75.
+- Checks run independently of the engine's own validation: count, dataset membership (ID **and** title), duplicates, finite scores, explanations, descending order, and expectations.
+- A crash is recorded as a failed check instead of being skipped. The script exits with code 1 on any failure.
+- It writes `reports/evaluation_results.json` with no timestamps, so reruns produce identical files.
+- It compares baseline and specialized results for the same user preferences.
+
+**2. `src/specialization.py`: specialized mode**
+
+- 5 listening contexts, each with 3 fictional example songs. For example, Workout uses "Last Rep Standing," "Sprint Interval," and "Pulse Check."
+- The examples are averaged into a prototype. Specialized score = **unchanged baseline score** + similarity bonus (up to +2.0) + shared tags (up to +1.0) + shared instruments (up to +1.0).
+- Explanations name the closest example song, for example: *"Closest example song: 'Sprint Interval'"*.
+
+**3. `app.py`**
+
+- Added a "Recommendation mode" toggle (Baseline is the default). The "Listening context" picker appears only in Specialized mode, to avoid clutter.
+- Results show which mode produced them, plus a note that the mode is rule-based and not a fine-tuned model.
+
+**4. Tests**
+
+- `tests/test_evaluation_runner.py` (14 tests). These feed the harness deliberately broken recommenders (duplicates, NaN scores, fake songs, wrong count, blank explanations, unsorted output, crashes) and check that each problem is caught. They also check that the CLI exits with code 1 on a dataset where profiles fail.
+- `tests/test_specialization.py` (11 tests). These cover the prototype math, that the score equals baseline + bonus, that the baseline is unchanged, that at least 3 profiles differ from baseline, determinism, and invalid input.
+
+### Design decisions and changes during implementation
+
+- **Expectations describe patterns, not song titles.** For example, "top song is lofi" rather than "top song is Library Rain." This tests behavior instead of memorized output. Specialized expectations were written from each context's intent before the results were inspected.
+- **Example songs are fictional.** If the examples had been dataset songs, those songs would have trivially ranked first. A test checks that no example title appears in the catalog.
+- **Comparison against baseline on the same expectations.** After the first run, every specialized profile passed. The assistant pointed out that this only matters if the baseline would *fail* some of those checks. It added a measurement that applies the same expectations to the baseline output. The result was baseline **8/9** and specialized **9/9**. This was reported honestly rather than tightening thresholds afterwards to create a bigger gap.
+- **An observed weakness was documented, not hidden.** Night Drive ranked a lofi song (*Midnight Coding*) 4th because of shared words ("mellow," "late-night," "electric piano") with one example song. The examples were not edited to hide this, since that would be tuning the examples to the test output.
+- **A `NameError` workaround was replaced.** An early version of the app change caught `NameError` in case the dataset failed to load. This was replaced with initializing `dataset_songs = []`, so the engine raises its own clear "empty dataset" error.
+
+### Actual evaluation results
+
+```text
+Profiles passed: 12/12 (100%)
+Checks passed:   110/110 (100%)
+Profiles with different results: 5/5 (required: 3)
+Context checks met overall: baseline 8/9, specialized 9/9
+OVERALL RESULT: PASS
+```
+
+Example: Reflective Evening (country / nostalgic / 0.45, Emotional context)
+
+- Baseline: Golden Fields, Old Photographs, Midnight Coding, Focus Flow, Coffee Shop Stories
+- Specialized: Old Photographs, Golden Fields, Rainy Window, Quiet Memories, Library Rain
+- Average valence of the top 5: 0.62 → 0.47
+
+### What was verified
+
+- The full test suite went from 14 to **39 passing tests**. All original tests are unchanged and still pass.
+- The evaluation harness was run twice, and the JSON files were byte-identical.
+- The Streamlit app was tested headlessly with Streamlit's `AppTest`. It was clicked in both modes with no exceptions, and the results header now appears once. The real server also started and passed its health check.
+
+### Reflection
+
+The most useful part of this process was questioning a result that looked too good. "All specialized checks pass" sounded impressive. Comparing against the baseline showed that the thresholds were loose and the real improvement was smaller. Documenting that honestly is more valuable than a 100% number with no context.
+
+---
+
 ## Design Pattern (SF10)
 
 **Not attempted.**

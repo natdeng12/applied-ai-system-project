@@ -32,6 +32,8 @@ The project also contains optional scoring logic for additional song attributes,
 
 VibeFinder is a rule-based recommendation simulation, not a trained machine-learning model. It does not learn from user listening histories or automatically adjust its scoring rules.
 
+VibeFinder also has an optional **specialized mode** that adjusts scoring for a chosen listening context, such as Focus / Study or Workout. It uses hand-written example songs and is still rule-based. No model was trained or fine-tuned. See Section 13.
+
 ## 4. Data
 
 The recommender uses a CSV dataset containing 20 fictional songs and 15 columns.
@@ -174,7 +176,7 @@ When multiple records share a duplicate ID, all records with that ID are exclude
 
 The recommendation validation checks that generated results contain valid scores and explanations, do not exceed the requested recommendation limit, do not contain duplicate songs, and only include songs from the validated dataset.
 
-The automated test suite currently contains **14 passing tests**.
+The automated test suite originally contained 14 passing tests. After the stretch features were added, it contains **39 passing tests**: the original 14, 14 for the evaluation harness, and 11 for the specialized mode. A separate evaluation harness also tests end-to-end behavior on 12 profiles (see Section 14).
 
 Manual testing also confirmed that an invalid song record was excluded while valid songs remained available for recommendations.
 
@@ -210,3 +212,97 @@ Another important lesson was that reliability is not just about whether an appli
 By adding dataset validation, recommendation checks, logging, and automated tests, I made the application more capable of identifying and handling errors instead of silently accepting potentially unreliable results.
 
 This project also helped me recognize the limitations of rule-based recommendation systems. A high matching score does not necessarily represent someone's actual taste, and the data and rules chosen by a developer can influence what users see.
+
+## 10. Ethical Considerations and Potential Misuse
+
+VibeFinder is designed as an educational music recommendation project, but its recommendations could still be misunderstood or overtrusted. For example, users might assume that a higher-scoring song is objectively better or that the system fully understands their musical preferences.
+
+The system could also contribute to a filter bubble by repeatedly prioritizing songs that match exact genre and mood labels instead of introducing users to different styles of music.
+
+To reduce these risks, VibeFinder provides explanations for its recommendations and makes its scoring rules transparent. The application is intended for educational exploration rather than professional music discovery. It does not collect personal listening histories or make decisions that significantly affect users' lives.
+
+## 11. What Surprised Me During Reliability Testing
+
+One thing that surprised me was how important data validation became, even with a relatively small dataset. A single invalid record could affect the recommendation process if the system accepted it without checking.
+
+During testing, I confirmed that the system could exclude an invalid song while keeping the remaining valid songs available for recommendations. I also tested duplicate song IDs and discovered that keeping only one record would not be a consistent solution. Instead, I decided to exclude every record sharing a duplicate ID.
+
+This showed me that reliability involves more than checking whether the application runs. The system also needs to identify problematic data, explain what went wrong, and handle errors without unnecessarily stopping the entire application.
+
+## 12. Collaboration with AI
+
+I used AI as a development assistant throughout this project to help explain coding concepts, troubleshoot errors, suggest improvements, and develop the reliability system.
+
+One suggestion I accepted was adding a dataset validation process that checks song records before they enter the recommendation engine. This helped the application identify missing information, invalid values, and duplicate IDs instead of silently processing unreliable data.
+
+One suggestion I changed was the scope of the Streamlit interface. Although the project contains additional scoring features for popularity, release decade, mood tags, lyrical themes, and instrumentation, I kept the main interface focused on genre, mood, and energy. I chose this simpler approach to keep the application understandable and focused on the project's main goal rather than adding too many controls.
+
+This collaboration taught me that AI-generated suggestions should not be accepted automatically. I needed to evaluate whether each suggestion was accurate, understandable, appropriate for my skill level, and aligned with the project's requirements.
+
+## 13. Specialized Recommendation Mode
+
+### What it is
+
+The specialized mode lets a user pick a **listening context** in addition to genre, mood, and energy:
+
+- Focus / Study
+- Workout / High Energy
+- Relaxation / Chill
+- Emotional / Reflective
+- Night Drive
+
+**No model training or fine-tuning occurred.** The approach is *few-shot-inspired*. Each context is defined by three hand-written, fictional example songs that are not in the dataset. The examples are averaged into a "prototype" for that context. Each song's specialized score is:
+
+`baseline score (unchanged genre + mood + energy rules) + context bonus`
+
+The context bonus has three parts:
+
+- **Audio-feature similarity to the prototype (up to +2.0):** energy, tempo, valence, danceability, and acousticness. Tempo is divided by 200 so it is on a 0–1 scale.
+- **Shared mood tags with the examples:** +0.5 each, up to +1.0.
+- **Shared instruments with the examples:** +0.5 each, up to +1.0.
+
+Each explanation lists every bonus and names the closest example song, so users can see why a song was chosen. The baseline mode is unchanged and is still the default.
+
+### Intended use
+
+The mode is for classroom demonstration of how context and example-based templates can change recommendations. It is not meant to predict what any real person wants to hear while studying or exercising.
+
+### Limitations
+
+- **The examples are the author's opinion.** Three example songs per context is a very small sample. It encodes one person's idea of what "study music" or "workout music" sounds like.
+- **Exact tag matching.** Tags and instruments only count when the words match exactly. This can cause odd results. Night Drive ranked *Midnight Coding* (a lofi track) 4th, partly because it shares the words "mellow," "late-night," and "electric piano" with one example song. Night Drive's average acousticness also went *up* slightly (0.26 → 0.31), the opposite of the intended direction.
+- **Mood semantics are ignored.** For the Study profile, *Rainy Window* (a sad R&B song) entered the top 5 because its audio features are calm. The system does not know that "sad" may be distracting for studying.
+- **Small catalog.** With only 20 songs, the same few low-energy acoustic songs appear in several contexts.
+- **Weights were chosen by hand.** The context bonus (up to 4.0) was set to roughly equal the baseline core rules (4.0). Different weights would produce different rankings.
+
+### Potential bias
+
+The context templates favor the instruments and tags used in the examples, such as synthesizers for Night Drive and 808 bass for Workout. Genres whose songs use other instruments (for example, acoustic genres in a workout context) are less likely to receive the tag/instrument bonus. Because the example songs and catalog songs were written with overlapping vocabulary, the bonus partly measures how closely the author's word choices line up between the two.
+
+### Measured results
+
+Each specialized test profile was run in both modes with identical user preferences:
+
+| Profile (context) | Baseline top pick | Specialized top pick | Shared songs (of 5) | Positions changed |
+|---|---|---|---|---|
+| Study Session (Focus / Study) | Focus Flow | Focus Flow | 3 | 2 |
+| Workout Mix (Workout) | Sunrise City | Sunrise City | 3 | 4 |
+| Wind Down (Relaxation) | Coffee Shop Stories | Coffee Shop Stories | 2 | 4 |
+| Reflective Evening (Emotional) | Golden Fields | Old Photographs | 2 | 5 |
+| Night Drive (Night Drive) | Night Drive Loop | Night Drive Loop | 3 | 3 |
+
+- **5 of 5 profiles** produced different top-5 lists (the requirement was at least 3).
+- Average features shifted in the intended direction for most contexts. Study energy went from 0.51 to 0.41, Workout energy from 0.83 to 0.87, Wind Down energy from 0.41 to 0.35, and Reflective valence from 0.62 to 0.47.
+- On the harness's context expectations, the baseline met **8/9** and the specialized mode met **9/9**. The thresholds are broad, so the baseline already does reasonably well, and the clear threshold-level improvement is the Reflective profile. The top pick changed in only 1 of 5 profiles, because the user's genre, mood, and energy still carry significant weight.
+
+## 14. Evaluation Harness Results
+
+`src/evaluation_runner.py` runs 12 predefined profiles: 7 baseline (including an unknown-genre case and an oversized `k=25` request) and 5 specialized. Each profile is checked for correct count, dataset membership, duplicates, finite scores, explanations, descending order, and profile-specific expectations. The harness exits with an error code if any check fails.
+
+Actual results on the current dataset:
+
+- **Profiles passed:** 12/12 (100%)
+- **Individual checks passed:** 110/110 (100%)
+- **Baseline vs specialized comparison:** 5/5 profiles differ (required: 3)
+
+These results mean the system behaves *consistently and reasonably* on these profiles. They do not prove the recommendations are *good* for real listeners. The expectation ranges are broad and were written by the developer, and the dataset is small and fictional. Full results are in `reports/evaluation_results.json`.
